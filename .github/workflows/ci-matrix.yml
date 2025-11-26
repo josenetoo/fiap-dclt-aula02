@@ -11,8 +11,8 @@ on:
 
 jobs:
   test-matrix:
-    name: 🧪 Test on Node ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
+    name: 🧪 Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     
     # ============================================
     # STRATEGY: Define a matriz de execução
