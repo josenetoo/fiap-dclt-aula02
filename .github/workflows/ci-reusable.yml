@@ -1,0 +1,41 @@
+# ============================================
+# WORKFLOW: CI com Workflows Reutilizáveis
+# Demonstra como chamar workflows reutilizáveis
+# ============================================
+name: 🚀 CI with Reusable Workflows
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # ============================================
+  # Chamar workflow reutilizável com Node 18
+  # ============================================
+  test-node-18:
+    name: 🧪 Test Node 18
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '18'
+  
+  # ============================================
+  # Chamar workflow reutilizável com Node 20
+  # ============================================
+  test-node-20:
+    name: 🧪 Test Node 20
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '20'
+  
+  # ============================================
+  # Deploy só após todos os testes passarem
+  # ============================================
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    needs: [test-node-18, test-node-20]
+    
+    steps:
+      - name: 🚀 Deploy
+        run: echo "✅ Todos os testes passaram! Deploying..."
