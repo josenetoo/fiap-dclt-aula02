@@ -1,0 +1,43 @@
+# ============================================
+# WORKFLOW: CI com Matrix Strategy
+# Executa testes em múltiplas versões do Node.js
+# ============================================
+name: 🔄 CI with Matrix
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-matrix:
+    name: 🧪 Test on Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    
+    # ============================================
+    # STRATEGY: Define a matriz de execução
+    # Cada combinação gera um job separado
+    # ============================================
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      # Usa a versão da matriz
+      - name: 🔧 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+      
+      - name: 📦 Install dependencies
+        working-directory: app
+        run: npm ci
+      
+      - name: 🧪 Run tests
+        working-directory: app
+        run: npm test
